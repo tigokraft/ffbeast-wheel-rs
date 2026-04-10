@@ -5,7 +5,7 @@ edition = "2021"
 description = "HID-based API for FFBeast Wheel"
 license = "MIT"
 keywords = ["ffbeast", "hid", "force-feedback", "sim-racing", "racing-wheel"]
-repository = "https://github.com/shubham0x13/ffbeast-wheel-api-rs"
+repository = "https://github.com/tigokraft/ffbeast-wheel-rs"
 readme = "README.md"
 
 [dependencies]
