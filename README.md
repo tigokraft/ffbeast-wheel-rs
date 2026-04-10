@@ -1,11 +1,13 @@
-# ffbeast-wheel-api
+# ffbeast-wheel-rs
 
 A native Rust HID library for communicating with the **[FFBeast](https://ffbeast.github.io/) steering wheel controller**.
 
-This is a full port of the TypeScript WebHID library
-[`@shubham0x13/ffbeast-wheel-webhid-api`](https://github.com/shubham0x13/ffbeast-wheel-webhid-api),
-rewritten for native environments using the [`hidapi`](https://crates.io/crates/hidapi) crate.
-The HID report layout and protocol are identical to the C++ reference implementation.
+This is a Rust rewrite of
+[`ffbeast-wheel-webhid-api`](https://github.com/shubham0x13/ffbeast-wheel-webhid-api)
+by [Shubham Patel](https://github.com/shubham0x13).
+The original library targets web browsers via the WebHID API; this crate uses
+[`hidapi`](https://crates.io/crates/hidapi) for native desktop applications, with
+a protocol and struct layout identical to the C++ reference implementation.
 
 ---
 
@@ -198,4 +200,10 @@ cargo test -- --ignored
 
 MIT — see [LICENSE](LICENSE).
 
-Original TypeScript implementation © Shubham Patel.
+---
+
+## Credits
+
+Original TypeScript WebHID implementation by
+[Shubham Patel](https://github.com/shubham0x13) —
+[`ffbeast-wheel-webhid-api`](https://github.com/shubham0x13/ffbeast-wheel-webhid-api).
