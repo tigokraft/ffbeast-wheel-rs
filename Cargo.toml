@@ -1,0 +1,13 @@
+[package]
+name = "ffbeast-wheel-api"
+version = "0.1.1"
+edition = "2021"
+description = "HID-based API for FFBeast Wheel"
+license = "MIT"
+keywords = ["ffbeast", "hid", "force-feedback", "sim-racing", "racing-wheel"]
+repository = "https://github.com/shubham0x13/ffbeast-wheel-api-rs"
+readme = "README.md"
+
+[dependencies]
+hidapi = "2"
+thiserror = "1"
