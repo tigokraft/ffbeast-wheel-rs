@@ -1,30 +1,6 @@
-/// Firmware version information.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct FirmwareVersion {
-    /// Release type byte (`0` = release, non-zero = pre-release/debug).
-    pub release_type: u8,
-    /// Year of the release.
-    pub major: u8,
-    /// Minor version (incremented when companion app update is needed).
-    pub minor: u8,
-    /// Patch version (incremented on each patch within the same version).
-    pub patch: u8,
-}
+//! Device settings structs: effect, hardware, ADC, GPIO, and combined.
 
-/// Firmware license information read from the device.
-#[derive(Debug, Clone)]
-pub struct FirmwareLicense {
-    /// Version of the running firmware.
-    pub firmware_version: FirmwareVersion,
-    /// Serial key components (3 × 32-bit values).
-    pub serial_key: [u32; 3],
-    /// Device ID components (3 × 32-bit values).
-    pub device_id: [u32; 3],
-    /// Registration status (`0` = unregistered, `1` = registered).
-    pub is_registered: u8,
-}
-
-/// Effect settings stored on the device.
+/// Force-feedback effect parameters stored on the device.
 #[derive(Debug, Clone)]
 pub struct EffectSettings {
     /// Motion range in degrees.
@@ -64,7 +40,7 @@ pub struct HardwareSettings {
     pub force_enabled: u8,
     /// Debug torque output enabled (`0` = Disabled, `1` = Enabled).
     pub debug_torque: u8,
-    /// Amplifier gain setting. See [`crate::AmplifierGain`].
+    /// Amplifier gain setting (raw byte). See [`crate::AmplifierGain`].
     pub amplifier_gain: u8,
     /// Calibration magnitude (0 to 100%).
     pub calibration_magnitude: u8,
@@ -93,17 +69,20 @@ pub struct AdcSettings {
     pub r_axis_min: [u16; 3],
     /// Maximum raw values for the 3 analog axes.
     pub r_axis_max: [u16; 3],
-    /// Axis smoothing factor. Divide by 100 to get normalized ratio (0..1).
+    /// Axis smoothing factor per axis. Divide by 100 to get normalised ratio (0..1).
     pub r_axis_smoothing: [u8; 3],
-    /// Point in % where "Button Low" is triggered. `0` = disabled.
+    /// Point in % where "Button Low" is triggered per axis. `0` = disabled.
     pub r_axis_to_button_low: [u8; 3],
-    /// Point in % where "Button High" is triggered. `100` = disabled.
+    /// Point in % where "Button High" is triggered per axis. `100` = disabled.
     pub r_axis_to_button_high: [u8; 3],
-    /// Axis inversion flags (`0` or `1`).
+    /// Axis inversion flags per axis (`0` or `1`).
     pub r_axis_invert: [u8; 3],
 }
 
 /// GPIO extension settings stored on the device.
+///
+/// All fields are stored as raw `u8` values on the wire. Use the
+/// enum types in [`crate::enums`] for human-readable interpretation.
 #[derive(Debug, Clone)]
 pub struct GpioSettings {
     /// Extension mode. See [`crate::ExtensionMode`].
@@ -122,50 +101,10 @@ pub struct GpioSettings {
     pub spi_clk_pulse_length: u8,
 }
 
-/// Direct force feedback control values sent to the device.
-///
-/// All force values use a normalised range of -10 000 to +10 000
-/// (i.e. -1.0 to +1.0 with four decimal digits of precision).
-#[derive(Debug, Clone, Default)]
-pub struct DirectControl {
-    /// Spring force acting opposite to wheel rotation.
-    /// Range: -10 000 to +10 000. Default: 0.
-    pub spring_force: i16,
-    /// Constant force moving the wheel in a fixed direction.
-    /// Range: -10 000 to +10 000. Default: 0.
-    pub constant_force: i16,
-    /// Periodic effect force (sine/triangle/etc.), not affected by dampening.
-    /// Range: -10 000 to +10 000. Default: 0.
-    pub periodic_force: i16,
-    /// Global force scaling factor (inverse).
-    /// Formula: `TotalForce = InitialForce × (1 − force_drop / 100)`.
-    /// Range: 0 to 100. Default: 0.
-    pub force_drop: u8,
-}
-
-/// Real-time device state received from the wheel controller.
-#[derive(Debug, Clone)]
-pub struct DeviceState {
-    /// Firmware version reported in each interrupt packet.
-    pub firmware_version: FirmwareVersion,
-    /// Registration status (`0` = unregistered, `1` = registered).
-    pub is_registered: u8,
-    /// Raw wheel position value. Range: roughly -10 000 to +10 000.
-    pub position: i16,
-    /// Raw torque value currently being output. Range: -10 000 to +10 000.
-    pub torque: i16,
-    /// Wheel position in degrees based on the active motion range.
-    /// `None` if motion range is not yet cached.
-    pub position_degrees: Option<f64>,
-    /// Torque normalised to -100.0 to +100.0.
-    /// Positive = right (CW), negative = left (CCW).
-    pub torque_normalized: f64,
-}
-
 /// Aggregated settings object containing all configuration groups.
 #[derive(Debug, Clone)]
 pub struct DeviceSettings {
-    /// Effect / force feedback settings.
+    /// Effect / force-feedback settings.
     pub effects: EffectSettings,
     /// Motor / hardware settings.
     pub hardware: HardwareSettings,
