@@ -27,27 +27,26 @@
 
 /// USB VID/PID and HID report size constants.
 pub mod constants;
-/// Enums and the field-type map for the device protocol.
+/// Enumerations for GPIO, hardware, SPI, report types, and settings fields.
 pub mod enums;
 /// Error type returned by all fallible API calls.
 pub mod error;
-/// Data structs that model device state and settings.
+/// Wire-protocol helpers: byte reader, math conversions, buffer builders, license parser.
+pub mod protocol;
+/// Data structs that model device state, settings, firmware, and control.
 pub mod types;
-/// Byte-level parsing utilities and unit-conversion helpers.
-pub mod utils;
-/// Main [`WheelApi`] implementation.
-pub mod wheel_api;
+/// Main [`WheelApi`] struct and all its `impl` blocks.
+pub mod api;
 
 // Convenience re-exports — mirror the flat export surface of the TypeScript package.
+pub use api::WheelApi;
 pub use enums::{
     AmplifierGain, ButtonMode, ExtensionMode, FieldType, PinMode, ReportData, ReportType,
     SettingField, SpiLatchMode, SpiMode,
 };
 pub use error::WheelError;
+pub use protocol::{convert_position_to_degrees, normalize_torque};
 pub use types::{
     AdcSettings, DeviceSettings, DeviceState, DirectControl, EffectSettings, FirmwareLicense,
     FirmwareVersion, GpioSettings, HardwareSettings,
 };
-pub use utils::{convert_position_to_degrees, normalize_torque};
-pub use wheel_api::WheelApi;
-
